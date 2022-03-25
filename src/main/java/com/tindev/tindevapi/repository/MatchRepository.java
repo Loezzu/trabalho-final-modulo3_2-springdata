@@ -1,9 +1,11 @@
 package com.tindev.tindevapi.repository;
 
+import com.tindev.tindevapi.entities.MatchEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MatchRepository {
+public interface MatchRepository extends JpaRepository<MatchEntity, Integer> {
 //    private static final List<Match> matchList = new ArrayList<>();
 //    private final AtomicInteger COUNTER = new AtomicInteger();
 //

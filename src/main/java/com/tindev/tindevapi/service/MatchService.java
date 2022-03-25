@@ -1,46 +1,66 @@
 package com.tindev.tindevapi.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.tindevapi.dto.match.MatchDTO;
+import com.tindev.tindevapi.entities.MatchEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
+import com.tindev.tindevapi.repository.MatchRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class MatchService {
-//
-//
-//    @Autowired
-//    private MatchRepository matchRepository;
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private ObjectMapper objectMapper;
+
+
+    private final MatchRepository matchRepository;
+
+    private final UserService userService;
+
+    private final ObjectMapper objectMapper;
+
+
+    public List<MatchDTO> list() {
+        return matchRepository.findAll()
+                .stream()
+                .map(match -> objectMapper.convertValue(match, MatchDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+    public MatchDTO addMatch(Integer userid1, Integer userid2) throws Exception {
+
+        MatchEntity match = new MatchEntity();
+
+        if(userService.getUserById(userid1).getProgLangs().equals(userService.getUserById(userid2).getProgLangs())){
+            match.setMatchedUserFirst(userid1);
+            match.setMatchedUserSecond(userid2);
+            MatchDTO deuMatch = objectMapper.convertValue(matchRepository.save(match), MatchDTO.class);
+            return deuMatch;
+        } else {
+            throw new RegraDeNegocioException("Não deu Match");
+        }
+
+    }
+
+
+
 //
 //    @Autowired
 //    private EmailService emailService;
 //
 //
-//    public List<MatchDTO> list() {
-//        return matchRepository.list()
-//                .stream()
-//                .map(this::getMatchDTOWithUsernameAndEmail)
-//                .collect(Collectors.toList());
-//    }
+
 //
 //    public List<MatchDTO> listMatchesOfTheUser(Integer idUser){
 //        return matchRepository.listMatchesOfUser(idUser).stream()
 //                .map(this::getMatchDTOWithUsernameAndEmail).collect(Collectors.toList());
 //    }
 //
-//    public MatchDTO addMatch(Integer userid1, Integer userid2) throws Exception {
-//        Match match = matchRepository.addMatch(userid1, userid2);
-//        MatchDTO matchDTO = getMatchDTOWithUsernameAndEmail(match);
-//        if (matchDTO != null) {
-//            emailService.sendEmailPessoa(matchDTO);
-//        }
-//
-//        return matchDTO;
-//
-//    }
+
 //
 //    public void deleteMatch(Integer matchid) throws Exception {
 //        matchRepository.deleteMatch(matchid);

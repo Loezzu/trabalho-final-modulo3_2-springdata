@@ -8,6 +8,7 @@ import com.tindev.tindevapi.dto.user.UserDTO;
 import com.tindev.tindevapi.entities.AddressEntity;
 import com.tindev.tindevapi.entities.PersonInfoEntity;
 import com.tindev.tindevapi.entities.UserEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.AddressRepository;
 import com.tindev.tindevapi.repository.PersonInfoRepository;
 import com.tindev.tindevapi.repository.UserRepository;
@@ -63,6 +64,12 @@ public class UserService {
 
         return objectMapper.convertValue(userRepository.save(userEntity), UserDTO.class);
 
+    }
+
+    public UserDTO getUserById(Integer id) throws Exception {
+        log.info("Calling the get user by id method");
+        return objectMapper.convertValue(userRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("User not found")), UserDTO.class);
     }
 
 

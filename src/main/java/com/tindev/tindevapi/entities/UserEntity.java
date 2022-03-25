@@ -1,20 +1,19 @@
 package com.tindev.tindevapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tindev.tindevapi.enums.Gender;
 import com.tindev.tindevapi.enums.Pref;
 import com.tindev.tindevapi.enums.ProgLangs;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity(name = "tindev_user")
 public class UserEntity {
 
@@ -36,6 +35,7 @@ public class UserEntity {
     private String password;
 
     @Column(name = "proglangs")
+
     @Enumerated(EnumType.STRING)
     private ProgLangs progLangs;
 
@@ -55,9 +55,9 @@ public class UserEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LikeEntity> likes;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<LikeEntity> likes;
 
 
 //    @JsonIgnore

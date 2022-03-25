@@ -51,10 +51,10 @@ public class EmailService {
         }
     }
 
-    public void sendEmailPessoa(MatchDTO matchDTO)  {
-        sendEmail(matchDTO.getMachedUserEmailFirst(), "Tindev - Match", getCreateMatchTemplateFirst(matchDTO));
-        sendEmail(matchDTO.getMatchedUserEmailSecond(), "Tindev - Match", getCreateMatchTemplateSecond(matchDTO));
-    }
+//    public void sendEmailPessoa(MatchDTO matchDTO)  {
+//        sendEmail(matchDTO.getMachedUserEmailFirst(), "Tindev - Match", getCreateMatchTemplateFirst(matchDTO));
+//        sendEmail(matchDTO.getMatchedUserEmailSecond(), "Tindev - Match", getCreateMatchTemplateSecond(matchDTO));
+//    }
 
 
 
@@ -69,25 +69,25 @@ public class EmailService {
         String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
         return html;
     }
-
-    public String getCreateMatchTemplateFirst(MatchDTO matchDTO) {
-        try {
-            return getTemplate(matchDTO.getMatchedUserNameFirst(), matchDTO.getMatchedUserNameSecond(), "email-template.ftl");
-
-        } catch ( IOException | TemplateException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getCreateMatchTemplateSecond(MatchDTO matchDTO) {
-        try {
-            return getTemplate(matchDTO.getMatchedUserNameSecond(), matchDTO.getMatchedUserNameFirst(), "email-template.ftl");
-
-        } catch ( IOException | TemplateException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//
+//    public String getCreateMatchTemplateFirst(MatchDTO matchDTO) {
+//        try {
+//            return getTemplate(matchDTO.getMatchedUserNameFirst(), matchDTO.getMatchedUserNameSecond(), "email-template.ftl");
+//
+//        } catch ( IOException | TemplateException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    public String getCreateMatchTemplateSecond(MatchDTO matchDTO) {
+//        try {
+//            return getTemplate(matchDTO.getMatchedUserNameSecond(), matchDTO.getMatchedUserNameFirst(), "email-template.ftl");
+//
+//        } catch ( IOException | TemplateException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
 }
