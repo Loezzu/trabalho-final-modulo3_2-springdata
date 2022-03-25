@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.like.LikeDTO;
 import com.tindev.tindevapi.entities.LikeEntity;
 import com.tindev.tindevapi.entities.UserEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.LikeRepository;
 import com.tindev.tindevapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class LikeService {
 
     public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
         if(likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null){
+
             throw new Exception("like já existe");
         }
             LikeEntity likeEntity = new LikeEntity();
@@ -46,9 +49,23 @@ public class LikeService {
             likeRepository.save(likeEntity);
 
 
+        if(likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
+                likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null){
+            throw new RegraDeNegocioException("match");
+
+
+        }
+
+
         return objectMapper.convertValue(likeEntity, LikeDTO.class);
 
+
+
     }
+
+
+
+
 
 //
 //    public List<LikeDTO> listLikesById(Integer id) throws Exception {

@@ -2,11 +2,13 @@ package com.tindev.tindevapi.repository;
 
 import com.tindev.tindevapi.entities.LikeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Integer> {
     LikeEntity findByUserIdAndLikedUserId(Integer userId, Integer likedUserId);
+    LikeEntity findByLikedUserIdAndUserId(Integer userId, Integer likedUserId);
 //
 //    private static final List<Like> likeList = new ArrayList<>();
 //    private final AtomicInteger COUNTER = new AtomicInteger();
@@ -59,5 +61,8 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Integer> {
 //                .findFirst()
 //                .orElseThrow(() -> new RegraDeNegocioException("Like não encontrado"));
 //    }
+
+//    @Query("select ltu from LIKE_TINDEV_USER ltu where ltu.user_id = ?1 and ltu.liked_user_id = ?2")
+
 
 }
