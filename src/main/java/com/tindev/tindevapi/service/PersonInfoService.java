@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PersonInfoService {
 
-    private final PersonInfoRepository persoInfoRepository;
+    private final PersonInfoRepository personInfoRepository;
     private final ObjectMapper objectMapper;
 
 
     public List<PersonInfoDTO> listPersonInfo() {
-        return persoInfoRepository.findAll()
+        return personInfoRepository.findAll()
                 .stream()
                 .map(persoInfo -> objectMapper.convertValue(persoInfo, PersonInfoDTO.class))
                 .collect(Collectors.toList());
@@ -30,7 +30,7 @@ public class PersonInfoService {
 
     public PersonInfoDTO createPersonInfo(PersonInfoCreateDTO personInfoCreateDTO) {
         PersonInfoEntity personInfoEntity = objectMapper.convertValue(personInfoCreateDTO, PersonInfoEntity.class);
-        PersonInfoEntity savedPersonInfoEntity = persoInfoRepository.save(personInfoEntity);
+        PersonInfoEntity savedPersonInfoEntity = personInfoRepository.save(personInfoEntity);
 
         return objectMapper.convertValue(savedPersonInfoEntity, PersonInfoDTO.class);
     }

@@ -1,5 +1,6 @@
 package com.tindev.tindevapi.dto.like;
 
+import com.tindev.tindevapi.entities.UserEntity;
 import lombok.Data;
 
 @Data

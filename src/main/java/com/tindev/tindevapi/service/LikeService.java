@@ -1,22 +1,55 @@
 package com.tindev.tindevapi.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.tindevapi.dto.like.LikeDTO;
+import com.tindev.tindevapi.entities.LikeEntity;
+import com.tindev.tindevapi.entities.UserEntity;
+import com.tindev.tindevapi.repository.LikeRepository;
+import com.tindev.tindevapi.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class LikeService {
 
-//    @Autowired
-//    private LikeRepository likeRepository;
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private ObjectMapper objectMapper;
-//
-//    public List<LikeDTO> listAllLikes(){
-//        return likeRepository.list().stream().map(like -> objectMapper.convertValue(like, LikeDTO.class)).collect(Collectors.toList());
-//    }
+
+    private final LikeRepository likeRepository;
+
+
+    private final UserService userService;
+
+    private final UserRepository userRepository;
+
+    private final ObjectMapper objectMapper;
+
+    public List<LikeDTO> listAllLikes(){
+        return likeRepository.findAll()
+                .stream()
+                .map(like -> objectMapper.convertValue(like, LikeDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+    public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
+        if(likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null){
+            throw new Exception("like já existe");
+        }
+            LikeEntity likeEntity = new LikeEntity();
+            likeEntity.setUserId(userId);
+            likeEntity.setLikedUserId(likedUserId);
+            likeEntity.setUserEntity(userRepository.findById(userId)
+                    .orElseThrow(() -> new Exception("Usuário não encontrado")));
+            likeRepository.save(likeEntity);
+
+
+        return objectMapper.convertValue(likeEntity, LikeDTO.class);
+
+    }
+
 //
 //    public List<LikeDTO> listLikesById(Integer id) throws Exception {
 //
@@ -27,11 +60,7 @@ public class LikeService {
 //       return objectMapper.convertValue(likes, objectMapper.getTypeFactory().constructCollectionType(List.class, LikeDTO.class));
 //    }
 //
-//    public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
-//        Like like = likeRepository.darLike(userId, likedUserId);
-//        return objectMapper.convertValue(like, LikeDTO.class);
-//
-//    }
+
 //
 //
 //    public void deleteLike(Integer id) throws Exception {

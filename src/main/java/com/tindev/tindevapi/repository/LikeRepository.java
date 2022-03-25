@@ -1,9 +1,12 @@
 package com.tindev.tindevapi.repository;
 
+import com.tindev.tindevapi.entities.LikeEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LikeRepository {
+public interface LikeRepository extends JpaRepository<LikeEntity, Integer> {
+    LikeEntity findByUserIdAndLikedUserId(Integer userId, Integer likedUserId);
 //
 //    private static final List<Like> likeList = new ArrayList<>();
 //    private final AtomicInteger COUNTER = new AtomicInteger();

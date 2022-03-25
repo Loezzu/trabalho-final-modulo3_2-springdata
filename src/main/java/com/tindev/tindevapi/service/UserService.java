@@ -2,18 +2,34 @@ package com.tindev.tindevapi.service;
 
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.tindevapi.dto.user.UserCreateDTO;
+import com.tindev.tindevapi.dto.user.UserDTO;
+import com.tindev.tindevapi.entities.AddressEntity;
+import com.tindev.tindevapi.entities.PersonInfoEntity;
+import com.tindev.tindevapi.entities.UserEntity;
+import com.tindev.tindevapi.repository.AddressRepository;
+import com.tindev.tindevapi.repository.PersonInfoRepository;
+import com.tindev.tindevapi.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+
+    private final AddressRepository addressRepository;
+
+    private final PersonInfoRepository personInfoRepository;
+
+    private final ObjectMapper objectMapper;
 //
 //    public UserDTO createUser(UserCreateDTO userToBeCreated) throws Exception {
 //        log.info("Calling the Create user method");
@@ -23,12 +39,33 @@ public class UserService {
 //        return objectMapper.convertValue(userRepository.create(userToCreate), UserDTO.class);
 //    }
 //
-//    public List<UserDTO> listUser(){
-//        log.info("Calling the list user method");
-//        return userRepository.list().stream()
-//                .map(user -> objectMapper.convertValue(user, UserDTO.class))
-//                .collect(Collectors.toList());
-//    }
+    public List<UserDTO> listUser(){
+        log.info("Calling the list user method");
+        return userRepository.findAll().stream()
+                .map(user -> objectMapper.convertValue(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public UserDTO createUser(UserCreateDTO userCreateDTO) throws Exception {
+        log.info("Calling the Create user method");
+        UserEntity userEntity = objectMapper.convertValue(userCreateDTO, UserEntity.class);
+
+        AddressEntity addressEntity = addressRepository.findById(userEntity.getAddressId())
+                .orElseThrow(() -> new Exception("Address not found"));
+
+        PersonInfoEntity personInfoEntity = personInfoRepository.findById(userEntity.getPersoInfoId())
+                .orElseThrow(() -> new Exception("Person info not found"));
+
+        userEntity.setAddress(addressEntity);
+        userEntity.setAddressId(addressEntity.getIdAddress());
+        userEntity.setPersonInfoEntity(personInfoEntity);
+        userEntity.setPersoInfoId(personInfoEntity.getIdPersonInfo());
+
+        return objectMapper.convertValue(userRepository.save(userEntity), UserDTO.class);
+
+    }
+
+
 //
 //    public UserDTO updateUser(Integer id, UserCreateDTO userUpdated) throws Exception {
 //        userRepository.getAddressById(userUpdated.getAddressId());

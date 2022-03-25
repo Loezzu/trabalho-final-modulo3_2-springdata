@@ -1,9 +1,11 @@
 package com.tindev.tindevapi.repository;
 
+import com.tindev.tindevapi.entities.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 //
 //    @Autowired
 //    private AddressService addressService;
