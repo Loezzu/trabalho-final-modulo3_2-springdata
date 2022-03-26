@@ -2,6 +2,7 @@ package com.tindev.tindevapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.like.LikeDTO;
+import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.LikeEntity;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.LikeRepository;
@@ -28,7 +29,7 @@ public class LikeService {
 
     private final MatchService matchService;
 
-    public List<LikeDTO> listAllLikes(){
+    public List<LikeDTO> listAllLikes() {
         return likeRepository.findAll()
                 .stream()
                 .map(like -> objectMapper.convertValue(like, LikeDTO.class))
@@ -37,19 +38,19 @@ public class LikeService {
 
 
     public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
-        if(likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null){
+        if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null) {
             throw new RegraDeNegocioException("like já existe");
         }
-            LikeEntity likeEntity = new LikeEntity();
-            likeEntity.setUserId(userId);
-            likeEntity.setLikedUserId(likedUserId);
+        LikeEntity likeEntity = new LikeEntity();
+        likeEntity.setUserId(userId);
+        likeEntity.setLikedUserId(likedUserId);
 //            likeEntity.setUserEntity(userRepository.findById(userId)
 //                    .orElseThrow(() -> new Exception("Usuário não encontrado")));
-            likeRepository.save(likeEntity);
+        likeRepository.save(likeEntity);
 
 
-        if(likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
-                likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null){
+        if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
+                likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null) {
             matchService.addMatch(userId, likedUserId);
 
         }
@@ -62,19 +63,9 @@ public class LikeService {
 
 
 
-//
-//    public List<LikeDTO> listLikesById(Integer id) throws Exception {
-//
-//       UserDTO user = userService.getUserById(id);
-//
-//       List<Like> likes = likeRepository.listLikesByUserId(user);
-//
-//       return objectMapper.convertValue(likes, objectMapper.getTypeFactory().constructCollectionType(List.class, LikeDTO.class));
-//    }
-//
 
-//
-//
+
+
 //    public void deleteLike(Integer id) throws Exception {
 //        likeRepository.removerLike(id);
 //    }
@@ -86,8 +77,7 @@ public class LikeService {
 //
 
 
+    }
 
 
 
-
-}

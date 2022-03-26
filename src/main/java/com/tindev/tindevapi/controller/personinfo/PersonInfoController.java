@@ -24,15 +24,27 @@ public class PersonInfoController{
     private PersonInfoService persoInfoService;
 
 
-    @GetMapping
+    @GetMapping("/list-person-info")
     public ResponseEntity<List<PersonInfoDTO>> list(){
         return ResponseEntity.ok(persoInfoService.listPersonInfo());
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<PersonInfoDTO> create(@RequestBody PersonInfoCreateDTO persoInfoDTO) throws Exception {
         return ResponseEntity.ok(persoInfoService.createPersonInfo(persoInfoDTO));
     }
+
+    @GetMapping("/list-likes-by-id")
+    public ResponseEntity<List<PersonInfoDTO>> listLikesById(@RequestParam("id") Integer id) throws Exception {
+        return ResponseEntity.ok(persoInfoService.listLikesById(id));
+    }
+
+    @GetMapping("/list-received-likes-by-id")
+    public ResponseEntity<List<PersonInfoDTO>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
+        return ResponseEntity.ok(persoInfoService.listReceivedLikeById(id));
+    }
+
+
 
 
 //

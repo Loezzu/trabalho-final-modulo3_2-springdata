@@ -36,6 +36,22 @@ public class PersonInfoService {
     }
 
 
+    //lista os likes que a pessoa deu
+    public List<PersonInfoDTO> listLikesById(Integer id) throws Exception {
+        return personInfoRepository.listLikesById(id).stream()
+                .map(personInfoEntity -> objectMapper.convertValue(personInfoEntity, PersonInfoDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    //lista os likes que a pessoa recebeu
+    public List<PersonInfoDTO> listReceivedLikeById(Integer id) throws Exception {
+        return personInfoRepository.listReceivedLikesById(id).stream()
+                .map(personInfoEntity -> objectMapper.convertValue(personInfoEntity, PersonInfoDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+
 
 //
 //
