@@ -1,5 +1,6 @@
 package com.tindev.tindevapi.controller.userAPI;
 
+import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.dto.user.UserCreateDTO;
 import com.tindev.tindevapi.dto.user.UserDTO;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
@@ -19,15 +20,15 @@ import java.util.List;
 @RequestMapping("/user")
 @Validated
 @RequiredArgsConstructor
-@Api(value = "3 - User API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"3 - User API"}, description = "User Controls")
+@Api(value = "3 - User API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"3 - User API"})
 public class UserController{
 
 
     private final UserService userService;
 
-    @GetMapping //localhost:8080/address
-    public ResponseEntity<List<UserDTO>> listUser(){
-        return ResponseEntity.ok(userService.listUser());
+    @GetMapping ("/listar/{id}")
+    public ResponseEntity<List<UserDTO>> listUser(@RequestParam(required = false) Integer id){
+        return ResponseEntity.ok(userService.listUser(id));
     }
 
     @PostMapping
@@ -36,23 +37,29 @@ public class UserController{
     }
 
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<UserDTO> getByUserId(@PathVariable("userId") Integer id) throws Exception {
-//        return ResponseEntity.ok(userService.getUserById(id));
-//    }
+    @PostMapping("/{userId}")
+    public ResponseEntity<UserDTO> updatedUser(@PathVariable("userId") Integer id,
+                                                    @Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception {
+        return ResponseEntity.ok(userService.updateUser(id, userCreateDTO));
+    }
 //
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Integer id) throws Exception {
+        userService.delete(id);
+        return ResponseEntity.ok("User deleted!");
+    }
 
-//    @PutMapping("/{userId}")
-//    public ResponseEntity<UserDTO> updatedUser(@PathVariable("userId") Integer id,
-//                                                    @Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception {
-//        return ResponseEntity.ok(userService.updateUser(id, userCreateDTO));
-//    }
-//
-//    @DeleteMapping("/{userId}")
-//    public ResponseEntity<String> deleteUser(@PathVariable("userId") Integer id) throws Exception {
-//        userService.deleteUser(id);
-//        return ResponseEntity.ok("User deleted!");
-//    }
+    @GetMapping("/list-likes-by-id")
+    public ResponseEntity<List<UserDTO>> listLikesById(@RequestParam("id") Integer id) throws Exception {
+        return ResponseEntity.ok(userService.listLikesById(id));
+    }
+
+    @GetMapping("/list-received-likes-by-id")
+    public ResponseEntity<List<UserDTO>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
+        return ResponseEntity.ok(userService.listReceivedLikeById(id));
+    }
+
+
 //
 //    @GetMapping("/available/{userId}")
 //    public ResponseEntity<List<UserDTO>> listAvailable(@PathVariable("userId") Integer id) throws Exception {

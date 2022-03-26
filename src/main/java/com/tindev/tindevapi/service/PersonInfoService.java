@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoCreateDTO;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.PersonInfoEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.PersonInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,77 +25,49 @@ public class PersonInfoService {
     private final ObjectMapper objectMapper;
 
 
-    public List<PersonInfoDTO> listPersonInfo() {
+    public List<PersonInfoDTO> listPersonInfo(Integer id) {
+        if(id != null) {
+            return personInfoRepository.findById(id)
+                    .stream()
+                    .map(persoInfo -> objectMapper.convertValue(persoInfo, PersonInfoDTO.class))
+                    .collect(Collectors.toList());
+        }
         return personInfoRepository.findAll()
                 .stream()
                 .map(persoInfo -> objectMapper.convertValue(persoInfo, PersonInfoDTO.class))
                 .collect(Collectors.toList());
     }
 
+
+
     public PersonInfoDTO createPersonInfo(PersonInfoCreateDTO personInfoCreateDTO) {
-        PersonInfoEntity personInfoEntity = objectMapper.convertValue(personInfoCreateDTO, PersonInfoEntity.class);
-        PersonInfoEntity savedPersonInfoEntity = personInfoRepository.save(personInfoEntity);
+            PersonInfoEntity personInfoEntity = objectMapper.convertValue(personInfoCreateDTO, PersonInfoEntity.class);
+            PersonInfoEntity savedPersonInfoEntity = personInfoRepository.save(personInfoEntity);
+            return objectMapper.convertValue(savedPersonInfoEntity, PersonInfoDTO.class);
+        }
 
-        return objectMapper.convertValue(savedPersonInfoEntity, PersonInfoDTO.class);
+    public PersonInfoDTO updatePersonInfo(PersonInfoCreateDTO personInfoCreateDTO, Integer idPerson)  {
+//        personInfoRepository.findById(idPerson).ifPresent(personInfoEntity -> {
+//            personInfoEntity.setIdPersonInfo(idPerson);
+//            personInfoEntity.setAge(personInfoCreateDTO.getAge());
+//            personInfoEntity.setEmail(personInfoCreateDTO.getEmail());
+//            personInfoEntity.setRealName(personInfoCreateDTO.getRealName());
+//            personInfoRepository.save(personInfoEntity);
+//        });
+        PersonInfoEntity personInfoEntity = objectMapper.convertValue(
+                (personInfoRepository.findById(idPerson)), PersonInfoEntity.class);
+            personInfoEntity.setIdPersonInfo(idPerson);
+            personInfoEntity.setAge(personInfoCreateDTO.getAge());
+            personInfoEntity.setEmail(personInfoCreateDTO.getEmail());
+            personInfoEntity.setRealName(personInfoCreateDTO.getRealName());
+        return  objectMapper.convertValue((personInfoRepository.save(personInfoEntity)), PersonInfoDTO.class);
+    }
+
+    public void delete(Integer id){
+        personInfoRepository.deleteById(id);
     }
 
 
-    //lista os likes que a pessoa deu
-    public List<PersonInfoDTO> listLikesById(Integer id) throws Exception {
-        return personInfoRepository.listLikesById(id).stream()
-                .map(personInfoEntity -> objectMapper.convertValue(personInfoEntity, PersonInfoDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    //lista os likes que a pessoa recebeu
-    public List<PersonInfoDTO> listReceivedLikeById(Integer id) throws Exception {
-        return personInfoRepository.listReceivedLikesById(id).stream()
-                .map(personInfoEntity -> objectMapper.convertValue(personInfoEntity, PersonInfoDTO.class))
-                .collect(Collectors.toList());
-    }
 
 
-
-
-//
-//
-//    public PersoInfoDTO create(PersoInfoCreateDTO persoInfoCreate) throws Exception {
-//        log.info("calling the Create method");
-//
-//       PersoInfo persoInfo = objectMapper.convertValue(persoInfoCreate, PersoInfo.class);
-//
-//        if (persoInfoRepository.getByEmail(persoInfo.getEmail())) {
-//            throw new RegraDeNegocioException("Email já cadastrado");
-//        }
-//
-//       PersoInfo persoInfoCreated = persoInfoRepository.create(persoInfo);
-//
-//        return objectMapper.convertValue(persoInfoCreated, PersoInfoDTO.class);
-//    }
-//
-//    public List<PersoInfoDTO> list(){
-//        log.info("calling the List method");
-//        return persoInfoRepository.list()
-//                .stream()
-//                .map(persoInfo -> objectMapper.convertValue(persoInfo, PersoInfoDTO.class))
-//                .collect(Collectors.toList());
-//    }
-//
-//
-//    public PersoInfoDTO update(Integer id, PersoInfoCreateDTO persoInfoUpdate) throws Exception {
-//        log.info("calling the Update method");
-//        PersoInfo persoInfo = objectMapper.convertValue(persoInfoUpdate, PersoInfo.class);
-//        return objectMapper.convertValue(persoInfoRepository.update(id, persoInfo), PersoInfoDTO.class);
-//    }
-//
-//    public void delete(Integer id) throws Exception {
-//        log.info("calling the Delete method");
-//        persoInfoRepository.delete(id);
-//    }
-//
-//
-//    public PersoInfoDTO getPersoInfoById(Integer id) throws RegraDeNegocioException {
-//        log.info("Calling get personal info by id method ");
-//        return objectMapper.convertValue(persoInfoRepository.getPersoInfoById(id), PersoInfoDTO.class);
-//    }
 }

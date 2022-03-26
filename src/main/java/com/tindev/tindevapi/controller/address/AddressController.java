@@ -6,6 +6,7 @@ import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.service.AddressService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,38 +18,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/address")
 @Validated
-@Api(value = "2 - Address API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"2 - Address API"}, description = "Address Controls")
+@Api(value = "2 - Address API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"2 - Address API"})
 public class AddressController{
 
     @Autowired
     private AddressService addressService;
 
-    @GetMapping //localhost:8080/address
-    public ResponseEntity<List<AddressDTO>> listAddress(){
-        return ResponseEntity.ok(addressService.listAddress());
+    @GetMapping("/list-address/{id}")
+    public ResponseEntity<List<AddressDTO>> listAddress(@RequestParam(required = false) Integer id){
+        return ResponseEntity.ok(addressService.listAddress(id));
     }
 
-    @PostMapping
-    public ResponseEntity<AddressDTO> postAddress(@Valid @RequestBody AddressCreateDTO addressCreateDTO){
+    @PostMapping("/create")
+    public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressCreateDTO addressCreateDTO){
         return ResponseEntity.ok(addressService.createAddress(addressCreateDTO));
     }
+    @PostMapping("/update")
+    public ResponseEntity<AddressDTO> update(@RequestBody AddressCreateDTO addressCreateDTO, @RequestParam("id") Integer id){
+        return ResponseEntity.ok(addressService.updateAddress(addressCreateDTO, id));
+    }
 
-//    @GetMapping("/{addressId}")
-//    public ResponseEntity<AddressDTO> getByIdAddress(@PathVariable("addressId") Integer id) throws RegraDeNegocioException {
-//        return ResponseEntity.ok(addressService.getAddressById(id));
-//    }
-//
-
-//
-//    @PutMapping("/{addressId}")
-//    public ResponseEntity<AddressDTO> updatedAddress(@PathVariable("addressId") Integer id,
-//                                                    @Valid @RequestBody AddressCreateDTO addressCreateDTO) throws RegraDeNegocioException {
-//        return ResponseEntity.ok(addressService.updateAddress(id, addressCreateDTO));
-//    }
-//
-//    @DeleteMapping("/{addressId}")
-//    public ResponseEntity<String> deleteAddress(@PathVariable("addressId") Integer id){
-//        return ResponseEntity.ok("Address Deleted!");
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@RequestParam("id") Integer id){
+        addressService.deleteAddress(id);
+        return new ResponseEntity<>("PersoInfo deleted", HttpStatus.ACCEPTED);
+    }
 
 }

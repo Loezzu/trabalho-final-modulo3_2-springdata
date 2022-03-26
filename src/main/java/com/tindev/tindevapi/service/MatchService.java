@@ -2,6 +2,7 @@ package com.tindev.tindevapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.match.MatchDTO;
+import com.tindev.tindevapi.dto.user.UserDTO;
 import com.tindev.tindevapi.entities.MatchEntity;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.MatchRepository;
@@ -32,21 +33,15 @@ public class MatchService {
 
 
     public MatchDTO addMatch(Integer userid1, Integer userid2) throws Exception {
-
         MatchEntity match = new MatchEntity();
-
         if(userService.getUserById(userid1).getProgLangs().equals(userService.getUserById(userid2).getProgLangs())){
             match.setMatchedUserFirst(userid1);
             match.setMatchedUserSecond(userid2);
-            MatchDTO deuMatch = objectMapper.convertValue(matchRepository.save(match), MatchDTO.class);
-            return deuMatch;
+            return objectMapper.convertValue(matchRepository.save(match), MatchDTO.class);
         } else {
             throw new RegraDeNegocioException("Não deu Match");
         }
-
     }
-
-
 
 //
 //    @Autowired

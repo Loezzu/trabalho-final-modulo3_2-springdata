@@ -17,16 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LikeService {
 
-
     private final LikeRepository likeRepository;
-
-
-    private final UserService userService;
-
-    private final UserRepository userRepository;
-
     private final ObjectMapper objectMapper;
-
     private final MatchService matchService;
 
     public List<LikeDTO> listAllLikes() {
@@ -36,7 +28,6 @@ public class LikeService {
                 .collect(Collectors.toList());
     }
 
-
     public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null) {
             throw new RegraDeNegocioException("like já existe");
@@ -44,37 +35,21 @@ public class LikeService {
         LikeEntity likeEntity = new LikeEntity();
         likeEntity.setUserId(userId);
         likeEntity.setLikedUserId(likedUserId);
-//            likeEntity.setUserEntity(userRepository.findById(userId)
-//                    .orElseThrow(() -> new Exception("Usuário não encontrado")));
         likeRepository.save(likeEntity);
-
-
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
                 likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null) {
             matchService.addMatch(userId, likedUserId);
-
         }
-
         return objectMapper.convertValue(likeEntity, LikeDTO.class);
-
     }
-
-
-
-
-
-
-
 
 //    public void deleteLike(Integer id) throws Exception {
 //        likeRepository.removerLike(id);
 //    }
-//
 //    public void deleteLikeByUserId(Integer id) throws Exception {
 //        likeRepository.getUserLike(id);
 //        likeRepository.removeAllLikesByUserId(id);
 //    }
-//
 
 
     }

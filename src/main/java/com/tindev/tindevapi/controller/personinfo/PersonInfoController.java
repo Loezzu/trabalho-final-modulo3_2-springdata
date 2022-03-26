@@ -5,6 +5,7 @@ import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.service.PersonInfoService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,17 +17,15 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/personinfo")
-@Api(value = "1 - PersonInfo API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"1 - PersonInfo API"}, description = "PersonInfo Controls")
+@Api(value = "1 - PersonInfo API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"1 - PersonInfo API"})
 public class PersonInfoController{
-
 
     @Autowired
     private PersonInfoService persoInfoService;
 
-
-    @GetMapping("/list-person-info")
-    public ResponseEntity<List<PersonInfoDTO>> list(){
-        return ResponseEntity.ok(persoInfoService.listPersonInfo());
+    @GetMapping("/list-person-info/{id}")
+    public ResponseEntity<List<PersonInfoDTO>> list(@RequestParam(required = false) Integer id){
+        return ResponseEntity.ok(persoInfoService.listPersonInfo(id));
     }
 
     @PostMapping("/create")
@@ -34,34 +33,18 @@ public class PersonInfoController{
         return ResponseEntity.ok(persoInfoService.createPersonInfo(persoInfoDTO));
     }
 
-    @GetMapping("/list-likes-by-id")
-    public ResponseEntity<List<PersonInfoDTO>> listLikesById(@RequestParam("id") Integer id) throws Exception {
-        return ResponseEntity.ok(persoInfoService.listLikesById(id));
+    @PostMapping("/update")
+    public ResponseEntity<PersonInfoDTO> update(@RequestBody PersonInfoCreateDTO personInfoCreateDTO, @RequestParam("id") Integer id){
+        return ResponseEntity.ok(persoInfoService.updatePersonInfo(personInfoCreateDTO, id));
     }
 
-    @GetMapping("/list-received-likes-by-id")
-    public ResponseEntity<List<PersonInfoDTO>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
-        return ResponseEntity.ok(persoInfoService.listReceivedLikeById(id));
+    @DeleteMapping("/delete-person-info-by-id")
+    public ResponseEntity<String> delete(@RequestParam("id") Integer id){
+        persoInfoService.delete(id);
+        return new ResponseEntity<>("PersoInfo deleted", HttpStatus.ACCEPTED);
     }
 
 
 
 
-//
-//    @GetMapping("/{persoInfoId}")
-//    public ResponseEntity<PersoInfoDTO> getByPersoInfoId(@PathVariable("persoInfoId") Integer id) throws RegraDeNegocioException {
-//        return ResponseEntity.ok(persoInfoService.getPersoInfoById(id));
-//    }
-//
-//
-//    @PutMapping("/{persoInfoId}")
-//    public ResponseEntity<PersoInfoDTO> update(@PathVariable("persoInfoId") Integer id, @Valid @RequestBody PersoInfoCreateDTO persoInfoUpdate) throws Exception {
-//        return ResponseEntity.ok(persoInfoService.update(id, persoInfoUpdate));
-//    }
-//
-//    @DeleteMapping("/{persoInfoId}")
-//    public ResponseEntity<String> delete(@PathVariable("persoInfoId") Integer id) throws Exception {
-//        persoInfoService.delete(id);
-//        return new ResponseEntity<>("PersoInfo deleted", HttpStatus.ACCEPTED);
-//    }
 }

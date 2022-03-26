@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,6 +39,9 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private ProgLangs progLangs;
+
+//    @Enumerated(EnumType.STRING)
+//    private List<ProgLangs> progLangsList;
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)

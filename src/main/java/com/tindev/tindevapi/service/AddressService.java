@@ -25,12 +25,21 @@ public class AddressService {
     private final ObjectMapper objectMapper;
 
 
-    public List<AddressDTO> listAddress(){
+    public List<AddressDTO> listAddress(Integer id){
+        if(id != null){
+            return addressRepository.findById(id)
+                    .stream().map(
+                            addressEntity -> objectMapper.convertValue(
+                                    addressEntity, AddressDTO.class))
+                    .collect(Collectors.toList());
+        }
         return addressRepository.findAll()
                 .stream()
                 .map(address -> objectMapper.convertValue(address, AddressDTO.class))
                 .collect(Collectors.toList());
     }
+
+
 
     public AddressDTO createAddress(AddressCreateDTO addressCreateDTO) {
         AddressEntity addressEntity = objectMapper.convertValue(addressCreateDTO, AddressEntity.class);
@@ -39,37 +48,20 @@ public class AddressService {
         return objectMapper.convertValue(savedAddressEntity, AddressDTO.class);
     }
 
+    public AddressDTO updateAddress(AddressCreateDTO addressCreateDTO, Integer idAddress){
+       AddressEntity addressEntity = objectMapper.convertValue(
+               (addressRepository.findById(idAddress)), AddressEntity.class);
+        addressEntity.setIdAddress(idAddress);
+        addressEntity.setStreet(addressCreateDTO.getStreet());
+        addressEntity.setNumber(addressCreateDTO.getNumber());
+        addressEntity.setCity(addressCreateDTO.getCity());
+        addressEntity.setCep(addressCreateDTO.getCep());
+        return objectMapper.convertValue(
+                (addressRepository.save(addressEntity)), AddressDTO.class);
+    }
 
-//
-//    @Autowired
-//    private ObjectMapper objectMapper;
-//
-//    public AddressDTO createAddress(AddressCreateDTO addressToBeCreated){
-//        log.info("Calling the Create address method");
-//        Address addressToCreate = objectMapper.convertValue(addressToBeCreated, Address.class);
-//        return objectMapper.convertValue(addressRepository.create(addressToCreate), AddressDTO.class);
-//    }
-//
-//    public List<AddressDTO> listAddress(){
-//        log.info("Calling the List address method");
-//        return addressRepository.list().stream()
-//                .map(address -> objectMapper.convertValue(address, AddressDTO.class))
-//                .collect(Collectors.toList());
-//    }
-//
-//    public AddressDTO updateAddress(Integer id, AddressCreateDTO addressUpdated) throws RegraDeNegocioException {
-//        log.info("Calling the Update address method");
-//        Address addressToUpdate = objectMapper.convertValue(addressUpdated, Address.class);
-//        return objectMapper.convertValue(addressRepository.update(id, addressToUpdate), AddressDTO.class);
-//    }
-//
-//    public void deleteAddress(Integer id) throws RegraDeNegocioException {
-//        log.info("Calling the Delete address method");
-//        addressRepository.delete(id);
-//    }
-//
-//    public AddressDTO getAddressById(Integer id) throws RegraDeNegocioException {
-//        log.info("Calling the get address by ID method");
-//        return objectMapper.convertValue(addressRepository.getAddressById(id), AddressDTO.class);
-//    }
+    public void deleteAddress(Integer id){
+        addressRepository.deleteById(id);
+    }
+
 }
