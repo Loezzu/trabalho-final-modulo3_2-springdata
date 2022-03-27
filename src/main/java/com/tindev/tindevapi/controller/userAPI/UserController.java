@@ -51,12 +51,12 @@ public class UserController{
     }
 
     @GetMapping("/list-likes-by-id")
-    public ResponseEntity<List<UserDTO>> listLikesById(@RequestParam("id") Integer id) throws Exception {
-        return ResponseEntity.ok(userService.listLikesById(id));
+    public ResponseEntity<List<UserDTOCompleto>> listLikesById(@RequestParam("id") Integer id) throws Exception {
+        return ResponseEntity.ok(userService.listLikeById(id));
     }
 
     @GetMapping("/list-received-likes-by-id")
-    public ResponseEntity<List<UserDTO>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
+    public ResponseEntity<List<UserDTOCompleto>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
         return ResponseEntity.ok(userService.listReceivedLikeById(id));
     }
 

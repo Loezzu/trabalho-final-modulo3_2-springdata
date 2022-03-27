@@ -4,6 +4,7 @@ import com.tindev.tindevapi.entities.PersonInfoEntity;
 import com.tindev.tindevapi.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,13 +12,13 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    @Query("select pi from personinfo pi inner join like_tindev_user ltu " +
-            "on pi.idPersonInfo = ltu.likedUserId where (:id) = ltu.userId")
-    List<UserEntity> listLikesById (Integer id);
+    @Query("select tu from tindev_user tu inner join like_tindev_user ltu " +
+            "on tu.userId = ltu.likedUserId where ltu.userId = (:id)")
+    List<UserEntity> listLikesById (@Param("id") Integer id);
 
 
-    @Query("select pi from personinfo pi inner join like_tindev_user ltu " +
-            "on pi.idPersonInfo = ltu.userId where ltu.likedUserId = (:id)")
-    List<UserEntity> listReceivedLikesById (Integer id);
+    @Query("select tu from tindev_user tu inner join like_tindev_user ltu " +
+            "on tu.userId = ltu.userId where ltu.likedUserId = (:id)")
+    List<UserEntity> listReceivedLikesById (@Param("id") Integer id);
 
 }

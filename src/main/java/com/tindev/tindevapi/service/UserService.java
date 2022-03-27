@@ -32,15 +32,16 @@ public class UserService {
     private final PersonInfoRepository personInfoRepository;
     private final ObjectMapper objectMapper;
 
-    public List<UserDTO> listUser(Integer id){
-        if(id != null){
-          getUserById(id);
-        } {
-            log.info("Calling the list user method");
-            return userRepository.findAll().stream()
-                    .map(user -> objectMapper.convertValue(user, UserDTO.class))
+    public List<UserDTO> listUser(Integer id) {
+        if (id != null) {
+            return userRepository.findById(id).stream().map(userEntity ->
+                            objectMapper.convertValue(userEntity, UserDTO.class))
                     .collect(Collectors.toList());
         }
+        log.info("Calling the list user method");
+        return userRepository.findAll().stream()
+                .map(user -> objectMapper.convertValue(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     public UserDTO createUser(UserCreateDTO userCreateDTO) throws Exception {
@@ -68,33 +69,49 @@ public class UserService {
         return objectMapper.convertValue((userRepository.save(userEntity)), UserDTO.class);
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) {
         userRepository.deleteById(id);
     }
 
-    public UserDTO getUserById(Integer id){
+    public UserDTO getUserById(Integer id) {
         return objectMapper.convertValue((userRepository.findById(id)), UserDTO.class);
     }
 
-    //lista os likes que a pessoa deu
-    public List<UserDTO> listLikesById(Integer id){
-        return userRepository.listLikesById(id).stream()
-                .map(userEntity -> objectMapper.convertValue(userEntity, UserDTO.class))
-                .collect(Collectors.toList());
+    //    lista os likes que a pessoa deu
+    public List<UserDTOCompleto> listLikeById(Integer id) {
+        List<UserDTOCompleto> userDTOCompletos = userRepository.listLikesById(id).stream().map(
+                userEntity -> {
+                    UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
+                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
+                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
+                    return userDTOCompleto;
+                }).collect(Collectors.toList());
+        return userDTOCompletos;
     }
 
     //lista os likes que a pessoa recebeu
-    public List<UserDTO> listReceivedLikeById(Integer id) {
-        return userRepository.listReceivedLikesById(id).stream().map(
-                userEntity -> objectMapper.convertValue(userEntity, UserDTO.class))
-                .collect(Collectors.toList());
+    public List<UserDTOCompleto> listReceivedLikeById(Integer id) {
+        List<UserDTOCompleto> userDTOCompletos = userRepository.listReceivedLikesById(id).stream().map(
+                userEntity -> {
+                    UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
+                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
+                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
+                    return userDTOCompleto;
+                }).collect(Collectors.toList());
+        return userDTOCompletos;
     }
 
-    public List<UserDTOCompleto> userDTOCompletos(){
+    public List<UserDTOCompleto> userDTOCompletos() {
         return new ArrayList<>(userRepository.findAll().stream().map(this::getUserComplete).toList());
     }
 
-    private UserDTOCompleto getUserComplete(UserEntity userEntity){
+    private UserDTOCompleto getUserComplete(UserEntity userEntity) {
         UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
         userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
         userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
@@ -103,4 +120,11 @@ public class UserService {
         return userDTOCompleto;
     }
 
+
+
+
 }
+
+
+
+
