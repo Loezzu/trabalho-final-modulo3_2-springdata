@@ -33,7 +33,7 @@ public class AddressController{
     public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressCreateDTO addressCreateDTO){
         return ResponseEntity.ok(addressService.createAddress(addressCreateDTO));
     }
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<AddressDTO> update(@RequestBody AddressCreateDTO addressCreateDTO, @RequestParam("id") Integer id){
         return ResponseEntity.ok(addressService.updateAddress(addressCreateDTO, id));
     }

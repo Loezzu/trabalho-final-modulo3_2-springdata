@@ -2,7 +2,8 @@ CREATE TABLE ADDRESS(
   ID_ADDRESS SERIAL PRIMARY KEY,
   STREET text NOT NULL,
   HOUSE_NUMBER numeric  NOT NULL,
-  CITY text NOT NULL
+  CITY text NOT null,
+  CEP text not null
 );
 
  drop table address; 

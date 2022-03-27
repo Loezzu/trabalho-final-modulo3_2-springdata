@@ -37,7 +37,7 @@ public class UserController{
     }
 
 
-    @PostMapping("/{userId}")
+    @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updatedUser(@PathVariable("userId") Integer id,
                                                     @Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception {
         return ResponseEntity.ok(userService.updateUser(id, userCreateDTO));

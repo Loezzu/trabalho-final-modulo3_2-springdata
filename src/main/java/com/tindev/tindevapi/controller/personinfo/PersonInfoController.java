@@ -33,7 +33,7 @@ public class PersonInfoController{
         return ResponseEntity.ok(persoInfoService.createPersonInfo(persoInfoDTO));
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<PersonInfoDTO> update(@RequestBody PersonInfoCreateDTO personInfoCreateDTO, @RequestParam("id") Integer id){
         return ResponseEntity.ok(persoInfoService.updatePersonInfo(personInfoCreateDTO, id));
     }
