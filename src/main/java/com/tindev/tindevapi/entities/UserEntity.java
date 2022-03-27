@@ -60,5 +60,16 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LikeEntity> likes;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "userEntityLiked", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeEntity> likesReceived;
+
+//    @OneToMany(mappedBy = "userEntityFirst", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<MatchEntity> matches;
+//
+//    @OneToMany(mappedBy = "userEntitySecond", cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<MatchEntity> matchesSecond;
+
+
 
 }

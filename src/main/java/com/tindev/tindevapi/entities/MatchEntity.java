@@ -1,5 +1,6 @@
 package com.tindev.tindevapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,11 +17,22 @@ public class MatchEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer matchId;
 
-    @Column(name = "USER_ID_FIRST")
+    @Column(name = "USER_ID_FIRST", insertable = false, updatable = false)
     private Integer matchedUserFirst;
 
-    @Column(name = "USER_ID_SECOND")
+    @Column(name = "USER_ID_SECOND",insertable = false, updatable = false)
     private Integer matchedUserSecond;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID_FIRST")
+    private UserEntity userEntityFirst;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID_SECOND")
+    private UserEntity userEntitySecond;
+
 
 
 }

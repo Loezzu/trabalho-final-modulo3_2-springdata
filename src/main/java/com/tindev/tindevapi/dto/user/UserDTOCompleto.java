@@ -13,6 +13,4 @@ public class UserDTOCompleto extends UserDTO{
     private Integer userId;
     AddressDTO addressDTO;
     PersonInfoDTO personInfoDTO;
-    List<LikeDTO> likes;
-
 }

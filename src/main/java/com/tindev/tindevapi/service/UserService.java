@@ -61,11 +61,13 @@ public class UserService {
 
     public UserDTO updateUser(Integer id, UserCreateDTO userUpdated) {
         UserEntity userEntity = userRepository.getById(id);
-        userEntity.setUserId(id);
-        userEntity.setPersoInfoId(userEntity.getPersoInfoId());
-        userEntity.setAddressId(userEntity.getAddressId());
+        userEntity.setPersoInfoId(userUpdated.getPersoInfoId());
+        userEntity.setAddressId(userUpdated.getAddressId());
         userEntity.setGender(userUpdated.getGender());
         userEntity.setPassword(userUpdated.getPassword());
+        userEntity.setUsername(userUpdated.getUsername());
+        userEntity.setProgLangs(userUpdated.getProgLangs());
+        userEntity.setPref(userUpdated.getPref());
         return objectMapper.convertValue((userRepository.save(userEntity)), UserDTO.class);
     }
 
@@ -85,8 +87,6 @@ public class UserService {
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
-                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
-                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
                     return userDTOCompleto;
                 }).collect(Collectors.toList());
         return userDTOCompletos;
@@ -100,8 +100,6 @@ public class UserService {
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
-                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
-                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
                     return userDTOCompleto;
                 }).collect(Collectors.toList());
         return userDTOCompletos;
@@ -115,8 +113,6 @@ public class UserService {
         UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
         userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
         userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
-        userDTOCompleto.setLikes(userEntity.getLikes().stream()
-                .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
         return userDTOCompleto;
     }
 
@@ -129,8 +125,6 @@ public class UserService {
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
                     userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
-                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
-                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
                     return userDTOCompleto;
                 }).collect(Collectors.toList());
         return userDTOCompletos;

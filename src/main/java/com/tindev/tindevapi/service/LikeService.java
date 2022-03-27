@@ -37,6 +37,7 @@ public class LikeService {
         likeEntity.setUserId(userId);
         likeEntity.setLikedUserId(likedUserId);
         likeEntity.setUserEntity(userRepository.getById(userId));
+        likeEntity.setUserEntityLiked(userRepository.getById(likedUserId));
         likeRepository.save(likeEntity);
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
                 likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null) {
