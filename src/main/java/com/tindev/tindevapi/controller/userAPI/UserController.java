@@ -65,6 +65,13 @@ public class UserController{
         return userService.userDTOCompletos();
     }
 
+    @GetMapping("/get-matches-by-id")
+    public ResponseEntity<List<UserDTOCompleto>> listMatchesById(@RequestParam("id") Integer id){
+        return ResponseEntity.ok(userService.listMatchesOfTheUser(id));
+    }
+
+
+
 //
 //    @GetMapping("/available/{userId}")
 //    public ResponseEntity<List<UserDTO>> listAvailable(@PathVariable("userId") Integer id) throws Exception {

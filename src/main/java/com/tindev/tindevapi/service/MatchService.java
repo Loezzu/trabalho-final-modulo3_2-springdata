@@ -44,12 +44,6 @@ public class MatchService {
     }
 
 //
-//    @Autowired
-//    private EmailService emailService;
-//
-//
-
-//
 //    public List<MatchDTO> listMatchesOfTheUser(Integer idUser){
 //        return matchRepository.listMatchesOfUser(idUser).stream()
 //                .map(this::getMatchDTOWithUsernameAndEmail).collect(Collectors.toList());

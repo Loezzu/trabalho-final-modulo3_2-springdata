@@ -121,6 +121,23 @@ public class UserService {
     }
 
 
+    public List<UserDTOCompleto> listMatchesOfTheUser (Integer id){
+
+        List<UserDTOCompleto> userDTOCompletos = userRepository.listMatchesOfTheUser(id).stream().map(
+                userEntity -> {
+                    UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+                    userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
+                    userDTOCompleto.setLikes(userEntity.getLikes().stream()
+                            .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
+                    return userDTOCompleto;
+                }).collect(Collectors.toList());
+        return userDTOCompletos;
+
+
+
+    }
 
 
 }
