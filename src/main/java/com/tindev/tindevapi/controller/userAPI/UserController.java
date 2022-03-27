@@ -3,6 +3,7 @@ package com.tindev.tindevapi.controller.userAPI;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.dto.user.UserCreateDTO;
 import com.tindev.tindevapi.dto.user.UserDTO;
+import com.tindev.tindevapi.dto.user.UserDTOCompleto;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.service.UserService;
 import io.swagger.annotations.Api;
@@ -59,6 +60,10 @@ public class UserController{
         return ResponseEntity.ok(userService.listReceivedLikeById(id));
     }
 
+    @GetMapping("/getCompleto")
+    public List<UserDTOCompleto> listUserComplete(){
+        return userService.userDTOCompletos();
+    }
 
 //
 //    @GetMapping("/available/{userId}")

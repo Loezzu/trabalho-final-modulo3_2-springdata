@@ -20,6 +20,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final ObjectMapper objectMapper;
     private final MatchService matchService;
+    private final UserRepository userRepository;
 
     public List<LikeDTO> listAllLikes() {
         return likeRepository.findAll()
@@ -35,6 +36,7 @@ public class LikeService {
         LikeEntity likeEntity = new LikeEntity();
         likeEntity.setUserId(userId);
         likeEntity.setLikedUserId(likedUserId);
+        likeEntity.setUserEntity(userRepository.getById(userId));
         likeRepository.save(likeEntity);
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
                 likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null) {

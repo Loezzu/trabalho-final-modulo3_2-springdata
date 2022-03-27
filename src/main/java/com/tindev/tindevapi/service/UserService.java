@@ -1,9 +1,12 @@
 package com.tindev.tindevapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tindev.tindevapi.dto.address.AddressDTO;
+import com.tindev.tindevapi.dto.like.LikeDTO;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.dto.user.UserCreateDTO;
 import com.tindev.tindevapi.dto.user.UserDTO;
+import com.tindev.tindevapi.dto.user.UserDTOCompleto;
 import com.tindev.tindevapi.entities.AddressEntity;
 import com.tindev.tindevapi.entities.PersonInfoEntity;
 import com.tindev.tindevapi.entities.UserEntity;
@@ -14,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +88,19 @@ public class UserService {
         return userRepository.listReceivedLikesById(id).stream().map(
                 userEntity -> objectMapper.convertValue(userEntity, UserDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public List<UserDTOCompleto> userDTOCompletos(){
+        return new ArrayList<>(userRepository.findAll().stream().map(this::getUserComplete).toList());
+    }
+
+    private UserDTOCompleto getUserComplete(UserEntity userEntity){
+        UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);
+        userDTOCompleto.setAddressDTO(objectMapper.convertValue(userEntity.getAddress(), AddressDTO.class));
+        userDTOCompleto.setPersonInfoDTO(objectMapper.convertValue(userEntity.getPersonInfoEntity(), PersonInfoDTO.class));
+        userDTOCompleto.setLikes(userEntity.getLikes().stream()
+                .map(likeEntity -> objectMapper.convertValue(likeEntity, LikeDTO.class)).collect(Collectors.toList()));
+        return userDTOCompleto;
     }
 
 }

@@ -6,7 +6,6 @@ CREATE TABLE ADDRESS(
   CEP text not null
 );
 
- drop table address; 
 
 CREATE TABLE PERSONINFO (
   ID_PERSONINFO SERIAL PRIMARY KEY,
@@ -15,7 +14,6 @@ CREATE TABLE PERSONINFO (
   EMAIL text  UNIQUE NOT NULL
   );
  
- drop table personinfo; 
  
  CREATE TABLE TINDEV_USER (
   USER_ID SERIAL PRIMARY KEY,
@@ -48,9 +46,9 @@ CREATE TABLE MATCH_TINDEV_USER(
 );
 
 
-insert into address (street, house_number, city)
-values ('rua sla', 123, 'gravataí'),
-       ('rua nsei', 321, 'cachoeirinha');
+insert into address (street, house_number, city, cep)
+values ('rua sla', 123, 'gravataí','12245566'),
+       ('rua nsei', 321, 'cachoeirinha','12134455');
 
 insert into personinfo(realname, age, email)
 values ('guilherme', 50, 'gui@mail.com'),
@@ -59,6 +57,15 @@ values ('guilherme', 50, 'gui@mail.com'),
 insert into tindev_user(username, password, personinfo_id, address_id, proglangs, gender, pref)
 values ('gui', 'gui123', 1, 1, 'JAVA', 'MALE', 'BOTH'),
 	   ('pablo', 'pablo123', 2, 2, 'JAVA', 'MALE', 'BOTH');
+	  
+insert into like_tindev_user(user_id, liked_user_id)
+values (1,2)
+	  
+drop table match_tindev_user;
+drop table like_tindev_user;
+drop table tindev_user;
+drop table address;
+drop table personinfo; 
 	  
 	  
 	

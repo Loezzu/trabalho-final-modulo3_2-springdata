@@ -1,5 +1,6 @@
 package com.tindev.tindevapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tindev.tindevapi.enums.Gender;
 import com.tindev.tindevapi.enums.Pref;
 import com.tindev.tindevapi.enums.ProgLangs;
@@ -36,12 +37,8 @@ public class UserEntity {
     private String password;
 
     @Column(name = "proglangs")
-
     @Enumerated(EnumType.STRING)
     private ProgLangs progLangs;
-
-//    @Enumerated(EnumType.STRING)
-//    private List<ProgLangs> progLangsList;
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
@@ -59,14 +56,9 @@ public class UserEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<LikeEntity> likes;
-
-
-//    @JsonIgnore
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<UserEntity> usuariosQEuCurti;
+    @JsonIgnore
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeEntity> likes;
 
 
 }
