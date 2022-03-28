@@ -4,15 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoCreateDTO;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.PersonInfoEntity;
-import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.PersonInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +19,6 @@ public class PersonInfoService {
 
     private final PersonInfoRepository personInfoRepository;
     private final ObjectMapper objectMapper;
-
 
     public List<PersonInfoDTO> listPersonInfo(Integer id) {
         if(id != null) {
@@ -39,7 +34,6 @@ public class PersonInfoService {
     }
 
 
-
     public PersonInfoDTO createPersonInfo(PersonInfoCreateDTO personInfoCreateDTO) {
             PersonInfoEntity personInfoEntity = objectMapper.convertValue(personInfoCreateDTO, PersonInfoEntity.class);
             PersonInfoEntity savedPersonInfoEntity = personInfoRepository.save(personInfoEntity);
@@ -47,13 +41,6 @@ public class PersonInfoService {
         }
 
     public PersonInfoDTO updatePersonInfo(PersonInfoCreateDTO personInfoCreateDTO, Integer idPerson)  {
-//        personInfoRepository.findById(idPerson).ifPresent(personInfoEntity -> {
-//            personInfoEntity.setIdPersonInfo(idPerson);
-//            personInfoEntity.setAge(personInfoCreateDTO.getAge());
-//            personInfoEntity.setEmail(personInfoCreateDTO.getEmail());
-//            personInfoEntity.setRealName(personInfoCreateDTO.getRealName());
-//            personInfoRepository.save(personInfoEntity);
-//        });
         PersonInfoEntity personInfoEntity = objectMapper.convertValue(
                 (personInfoRepository.findById(idPerson)), PersonInfoEntity.class);
             personInfoEntity.setIdPersonInfo(idPerson);
@@ -66,8 +53,6 @@ public class PersonInfoService {
     public void delete(Integer id){
         personInfoRepository.deleteById(id);
     }
-
-
 
 
 }

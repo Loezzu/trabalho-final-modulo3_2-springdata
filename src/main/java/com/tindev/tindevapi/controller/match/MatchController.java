@@ -38,10 +38,10 @@ public class MatchController{
     }
 
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<List<MatchDTO>> listMatchesOfTheUser(@PathVariable("userId") Integer userId){
-//        return ResponseEntity.ok(matchService.listMatchesByUser(userId));
-//    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<MatchDTO>> listMatchesOfTheUser(@PathVariable("userId") Integer userId){
+        return ResponseEntity.ok(matchService.listByUserId(userId));
+    }
 
 
 

@@ -36,19 +36,18 @@ public class LikeController{
     }
 
 
-
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<List<LikeDTO>> listLikeOfTheUser(@PathVariable("userId")Integer id) throws Exception {
-//        return ResponseEntity.ok(likeService.listLikesById(id));
-//    }
-//
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<LikeDTO>> listLikeOfTheUser(@PathVariable("userId")Integer id) throws Exception {
+        return ResponseEntity.ok(likeService.listAllLikesByUser(id));
+    }
 
 
-//    @DeleteMapping("/user/{userId}")
-//    public ResponseEntity<String> deleteLikeByUser(@PathVariable("userId") Integer userId) throws Exception {
-//        likeService.deleteLikeByUserId(userId);
-//        return ResponseEntity.ok("Like deleted");
-//    }
+
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<String> deleteLikeByUser(@PathVariable("userId") Integer userId) throws Exception {
+        likeService.deleteLikeByUserId(userId);
+        return ResponseEntity.ok("Like deleted");
+    }
 
 
 }

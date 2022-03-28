@@ -2,12 +2,10 @@ package com.tindev.tindevapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.like.LikeDTO;
-import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.LikeEntity;
 import com.tindev.tindevapi.entities.UserEntity;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.LikeRepository;
-import com.tindev.tindevapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +19,17 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final ObjectMapper objectMapper;
     private final MatchService matchService;
-//    private final UserRepository userRepository;
     private final UserService userService;
 
     public List<LikeDTO> listAllLikes() {
         return likeRepository.findAll()
+                .stream()
+                .map(like -> objectMapper.convertValue(like, LikeDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<LikeDTO> listAllLikesByUser(Integer id) {
+        return likeRepository.findAllByUserId(id)
                 .stream()
                 .map(like -> objectMapper.convertValue(like, LikeDTO.class))
                 .collect(Collectors.toList());
@@ -51,10 +55,10 @@ public class LikeService {
     public void deleteLike(Integer id) throws Exception {
         likeRepository.deleteById(id);
     }
-//    public void deleteLikeByUserId(Integer id) throws Exception {
-//        likeRepository.getUserLike(id);
-//        likeRepository.removeAllLikesByUserId(id);
-//    }
+
+    public void deleteLikeByUserId(Integer id) throws Exception {
+        likeRepository.deleteAll(likeRepository.findAllByUserId(id));
+    }
 
 
     }

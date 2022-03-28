@@ -3,14 +3,10 @@ package com.tindev.tindevapi.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.address.AddressCreateDTO;
 import com.tindev.tindevapi.dto.address.AddressDTO;
-import com.tindev.tindevapi.dto.personInfo.PersonInfoCreateDTO;
-import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.AddressEntity;
-import com.tindev.tindevapi.entities.PersonInfoEntity;
 import com.tindev.tindevapi.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +19,6 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final ObjectMapper objectMapper;
-
 
     public List<AddressDTO> listAddress(Integer id){
         if(id != null){
@@ -38,8 +33,6 @@ public class AddressService {
                 .map(address -> objectMapper.convertValue(address, AddressDTO.class))
                 .collect(Collectors.toList());
     }
-
-
 
     public AddressDTO createAddress(AddressCreateDTO addressCreateDTO) {
         AddressEntity addressEntity = objectMapper.convertValue(addressCreateDTO, AddressEntity.class);
