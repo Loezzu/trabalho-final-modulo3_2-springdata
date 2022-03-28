@@ -23,7 +23,7 @@ public class UserController implements UserAPI{
 
     private final UserService userService;
 
-    @GetMapping ("/listar")
+    @GetMapping ("/list")
     public ResponseEntity<List<UserDTO>> listUser(@RequestParam(required = false) Integer id) throws Exception {
         return ResponseEntity.ok(userService.listUsers(id));
     }
@@ -56,7 +56,7 @@ public class UserController implements UserAPI{
         return ResponseEntity.ok(userService.listReceivedLikesOfTheUserById(id));
     }
 
-    @GetMapping("/getCompleto")
+    @GetMapping("/getComplete")
     public ResponseEntity<List<UserDTOCompleto>> listUserComplete(@RequestParam(value = "id", required = false) Integer id) throws Exception {
         return ResponseEntity.ok(userService.listUserDTOComplete(id));
     }
