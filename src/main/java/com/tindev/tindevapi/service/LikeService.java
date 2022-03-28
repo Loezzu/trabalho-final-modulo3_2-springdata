@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.like.LikeDTO;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.entities.LikeEntity;
+import com.tindev.tindevapi.entities.UserEntity;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.LikeRepository;
 import com.tindev.tindevapi.repository.UserRepository;
@@ -20,7 +21,8 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final ObjectMapper objectMapper;
     private final MatchService matchService;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
+    private final UserService userService;
 
     public List<LikeDTO> listAllLikes() {
         return likeRepository.findAll()
@@ -36,8 +38,8 @@ public class LikeService {
         LikeEntity likeEntity = new LikeEntity();
         likeEntity.setUserId(userId);
         likeEntity.setLikedUserId(likedUserId);
-        likeEntity.setUserEntity(userRepository.getById(userId));
-        likeEntity.setUserEntityLiked(userRepository.getById(likedUserId));
+        likeEntity.setUserEntity(objectMapper.convertValue(userService.getUserById(userId), UserEntity.class));
+        likeEntity.setUserEntityLiked(objectMapper.convertValue(userService.getUserById(likedUserId), UserEntity.class));
         likeRepository.save(likeEntity);
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null &&
                 likeRepository.findByLikedUserIdAndUserId(userId, likedUserId) != null) {
@@ -46,9 +48,9 @@ public class LikeService {
         return objectMapper.convertValue(likeEntity, LikeDTO.class);
     }
 
-//    public void deleteLike(Integer id) throws Exception {
-//        likeRepository.removerLike(id);
-//    }
+    public void deleteLike(Integer id) throws Exception {
+        likeRepository.deleteById(id);
+    }
 //    public void deleteLikeByUserId(Integer id) throws Exception {
 //        likeRepository.getUserLike(id);
 //        likeRepository.removeAllLikesByUserId(id);

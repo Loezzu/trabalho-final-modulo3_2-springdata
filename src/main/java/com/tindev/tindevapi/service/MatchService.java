@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.match.MatchDTO;
 import com.tindev.tindevapi.dto.user.UserDTO;
 import com.tindev.tindevapi.entities.MatchEntity;
+import com.tindev.tindevapi.entities.UserEntity;
 import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class MatchService {
 
     private final UserService userService;
 
+
     private final ObjectMapper objectMapper;
 
 
@@ -32,16 +35,25 @@ public class MatchService {
     }
 
 
+
     public MatchDTO addMatch(Integer userid1, Integer userid2) throws Exception {
         MatchEntity match = new MatchEntity();
         if(userService.getUserById(userid1).getProgLangs().equals(userService.getUserById(userid2).getProgLangs())){
             match.setMatchedUserFirst(userid1);
             match.setMatchedUserSecond(userid2);
+            match.setUserEntityFirst(objectMapper.convertValue(userService.getUserById(userid1), UserEntity.class));
+            match.setUserEntitySecond(objectMapper.convertValue(userService.getUserById(userid2), UserEntity.class));
             return objectMapper.convertValue(matchRepository.save(match), MatchDTO.class);
         } else {
             throw new RegraDeNegocioException("Não deu Match");
         }
     }
+
+
+    public void deleteMatch(Integer matchid) throws Exception {
+        matchRepository.deleteById(matchid);
+    }
+
 
 //
 //    public List<MatchDTO> listMatchesOfTheUser(Integer idUser){
@@ -50,11 +62,7 @@ public class MatchService {
 //    }
 //
 
-//
-//    public void deleteMatch(Integer matchid) throws Exception {
-//        matchRepository.deleteMatch(matchid);
-//    }
-//
+
 //    private MatchDTO getMatchDTOWithUsernameAndEmail(Match match) {
 //        try {
 //            MatchDTO matchDTO = objectMapper.convertValue(match, MatchDTO.class);

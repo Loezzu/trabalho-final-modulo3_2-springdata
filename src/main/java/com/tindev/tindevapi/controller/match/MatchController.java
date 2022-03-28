@@ -31,18 +31,19 @@ public class MatchController{
     }
 
 
-//
+    @DeleteMapping("/{matchId}")
+    public ResponseEntity<String> deleteMatch(@PathVariable("matchId") Integer matchId) throws Exception {
+        matchService.deleteMatch(matchId);
+        return ResponseEntity.ok("Match Deletado!");
+    }
+
+
 //    @GetMapping("/{userId}")
 //    public ResponseEntity<List<MatchDTO>> listMatchesOfTheUser(@PathVariable("userId") Integer userId){
-//        return ResponseEntity.ok(matchService.listMatchesOfTheUser(userId));
+//        return ResponseEntity.ok(matchService.listMatchesByUser(userId));
 //    }
-//
 
-//
-//    @DeleteMapping("/{matchId}")
-//    public ResponseEntity<String> deleteMatch(@PathVariable("matchId") Integer matchId) throws Exception {
-//        matchService.deleteMatch(matchId);
-//        return ResponseEntity.ok("Match Deletado!");
-//    }
+
+
 
 }

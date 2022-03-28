@@ -1,6 +1,7 @@
 package com.tindev.tindevapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.tindev.tindevapi.dto.address.AddressDTO;
 import com.tindev.tindevapi.dto.like.LikeDTO;
 import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
@@ -16,8 +17,10 @@ import com.tindev.tindevapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.beans.BeanProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +79,7 @@ public class UserService {
     }
 
     public UserDTO getUserById(Integer id) {
-        return objectMapper.convertValue((userRepository.findById(id)), UserDTO.class);
+        return objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).convertValue((userRepository.findById(id)), UserDTO.class);
     }
 
     //    lista os likes que a pessoa deu
@@ -118,7 +121,6 @@ public class UserService {
 
 
     public List<UserDTOCompleto> listMatchesOfTheUser (Integer id){
-
         List<UserDTOCompleto> userDTOCompletos = userRepository.listMatchesOfTheUser(id).stream().map(
                 userEntity -> {
                     UserDTOCompleto userDTOCompleto = objectMapper.convertValue(userEntity, UserDTOCompleto.class);

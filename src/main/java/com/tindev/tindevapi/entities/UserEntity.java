@@ -64,11 +64,11 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntityLiked", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LikeEntity> likesReceived;
 
-//    @OneToMany(mappedBy = "userEntityFirst", cascade = CascadeType.PERSIST, orphanRemoval = true)
-//    private List<MatchEntity> matches;
-//
-//    @OneToMany(mappedBy = "userEntitySecond", cascade = CascadeType.PERSIST, orphanRemoval = true)
-//    private List<MatchEntity> matchesSecond;
+    @OneToMany(mappedBy = "userEntityFirst", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MatchEntity> matches;
+
+    @OneToMany(mappedBy = "userEntitySecond", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MatchEntity> matchesSecond;
 
 
 

@@ -1,21 +1,11 @@
 package com.tindev.tindevapi.repository;
 
 import com.tindev.tindevapi.entities.MatchEntity;
-import com.tindev.tindevapi.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface MatchRepository extends JpaRepository<MatchEntity, Integer> {
-
-
-
-
-
 
 
 //    private static final List<Match> matchList = new ArrayList<>();
