@@ -28,16 +28,17 @@ public class LikeService {
                 .collect(Collectors.toList());
     }
 
-    public List<LikeDTO> listAllLikesByUser(Integer id) {
+    public List<LikeDTO> listAllLikesByUser(Integer id) throws RegraDeNegocioException {
+        userService.getUserById(id);
         return likeRepository.findAllByUserId(id)
                 .stream()
                 .map(like -> objectMapper.convertValue(like, LikeDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public LikeDTO darLike(Integer userId, Integer likedUserId) throws Exception {
+    public LikeDTO giveLike(Integer userId, Integer likedUserId) throws Exception {
         if (likeRepository.findByUserIdAndLikedUserId(userId, likedUserId) != null) {
-            throw new RegraDeNegocioException("like já existe");
+            throw new RegraDeNegocioException("like already exists");
         }
         LikeEntity likeEntity = new LikeEntity();
         likeEntity.setUserId(userId);
@@ -52,16 +53,16 @@ public class LikeService {
         return objectMapper.convertValue(likeEntity, LikeDTO.class);
     }
 
-    public void deleteLike(Integer id) throws Exception {
+    public void deleteLike(Integer id) throws RegraDeNegocioException {
+        likeRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         likeRepository.deleteById(id);
     }
 
-    public void deleteLikeByUserId(Integer id) throws Exception {
+    public void deleteLikeByUserId(Integer id) throws RegraDeNegocioException {
+        userService.getUserById(id);
         likeRepository.deleteAll(likeRepository.findAllByUserId(id));
     }
-
-
-    }
+}
 
 
 

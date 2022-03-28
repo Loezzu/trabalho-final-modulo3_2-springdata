@@ -14,5 +14,4 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Integer> {
 
     MatchEntity findByMatchedUserFirstAndMatchedUserSecond(Integer userFirst, Integer userSecond);
 
-    List<MatchEntity> findByMatchedUserFirst(Integer userid);
 }

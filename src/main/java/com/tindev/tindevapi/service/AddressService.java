@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tindev.tindevapi.dto.address.AddressCreateDTO;
 import com.tindev.tindevapi.dto.address.AddressDTO;
 import com.tindev.tindevapi.entities.AddressEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,9 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final ObjectMapper objectMapper;
 
-    public List<AddressDTO> listAddress(Integer id){
+    public List<AddressDTO> listAddress(Integer id) throws RegraDeNegocioException {
         if(id != null){
+            addressRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
             return addressRepository.findById(id)
                     .stream().map(
                             addressEntity -> objectMapper.convertValue(
@@ -41,20 +43,20 @@ public class AddressService {
         return objectMapper.convertValue(savedAddressEntity, AddressDTO.class);
     }
 
-    public AddressDTO updateAddress(AddressCreateDTO addressCreateDTO, Integer idAddress){
-       AddressEntity addressEntity = objectMapper.convertValue(
+    public AddressDTO updateAddress(AddressCreateDTO addressCreateDTO, Integer idAddress) throws RegraDeNegocioException{
+        addressRepository.findById(idAddress).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
+        AddressEntity addressEntity = objectMapper.convertValue(
                (addressRepository.findById(idAddress)), AddressEntity.class);
         addressEntity.setIdAddress(idAddress);
         addressEntity.setStreet(addressCreateDTO.getStreet());
         addressEntity.setNumber(addressCreateDTO.getNumber());
         addressEntity.setCity(addressCreateDTO.getCity());
         addressEntity.setCep(addressCreateDTO.getCep());
-        return objectMapper.convertValue(
-                (addressRepository.save(addressEntity)), AddressDTO.class);
+        return objectMapper.convertValue((addressRepository.save(addressEntity)), AddressDTO.class);
     }
 
-    public void deleteAddress(Integer id){
+    public void deleteAddress(Integer id) throws RegraDeNegocioException {
+        addressRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         addressRepository.deleteById(id);
     }
-
 }

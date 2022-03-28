@@ -20,7 +20,6 @@ public class MatchService {
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
-
     public List<MatchDTO> list() {
         return matchRepository.findAll()
                 .stream()
@@ -28,7 +27,8 @@ public class MatchService {
                 .collect(Collectors.toList());
     }
 
-    public List<MatchDTO> listByUserId(Integer userid) {
+    public List<MatchDTO> listByUserId(Integer userid) throws RegraDeNegocioException {
+        userService.getUserById(userid);
         return matchRepository.findByMatchedUserFirstOrAndMatchedUserSecond(userid)
                 .stream()
                 .map(match -> objectMapper.convertValue(match, MatchDTO.class))
@@ -42,8 +42,6 @@ public class MatchService {
         } else if(userid1.equals(userid2)) {
             throw new RegraDeNegocioException("You can't match with yourself");
         }
-
-
         if(userService.getUserById(userid1).getProgLangs().equals(userService.getUserById(userid2).getProgLangs())){
             match.setMatchedUserFirst(userid1);
             match.setMatchedUserSecond(userid2);
@@ -51,13 +49,13 @@ public class MatchService {
             match.setUserEntitySecond(objectMapper.convertValue(userService.getUserById(userid2), UserEntity.class));
             return objectMapper.convertValue(matchRepository.save(match), MatchDTO.class);
         } else {
-            throw new RegraDeNegocioException("Não deu Match");
+            throw new RegraDeNegocioException("Didn't match this time!");
         }
     }
 
-    public void deleteMatch(Integer matchid) throws Exception {
-        matchRepository.deleteById(matchid);
+    public void deleteMatch(Integer matchId) throws Exception {
+        matchRepository.findById(matchId).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
+        matchRepository.deleteById(matchId);
     }
-
 
 }

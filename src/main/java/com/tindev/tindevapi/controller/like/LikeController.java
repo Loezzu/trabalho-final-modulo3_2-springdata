@@ -13,19 +13,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/like")
 @Api(value = "4 - Like API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"4 - Like API"}, description = "Like Controls")
-public class LikeController{
+public class LikeController implements LikeAPI{
 
     @Autowired
     private LikeService likeService;
 
     @GetMapping
-    public ResponseEntity<List<LikeDTO>> listLikes() throws Exception {
+    public ResponseEntity<List<LikeDTO>> listLikes(){
         return ResponseEntity.ok(likeService.listAllLikes());
     }
 
     @PostMapping("/{userId}/{likedUserId}")
     public ResponseEntity<LikeDTO> darLike(@PathVariable("userId") Integer userId, @PathVariable("likedUserId") Integer likedUserId) throws Exception {
-        return ResponseEntity.ok(likeService.darLike(userId, likedUserId));
+        return ResponseEntity.ok(likeService.giveLike(userId, likedUserId));
     }
 
 

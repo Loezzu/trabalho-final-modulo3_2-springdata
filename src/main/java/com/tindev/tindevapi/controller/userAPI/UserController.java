@@ -1,14 +1,11 @@
 package com.tindev.tindevapi.controller.userAPI;
 
-import com.tindev.tindevapi.dto.personInfo.PersonInfoDTO;
 import com.tindev.tindevapi.dto.user.UserCreateDTO;
 import com.tindev.tindevapi.dto.user.UserDTO;
 import com.tindev.tindevapi.dto.user.UserDTOCompleto;
-import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.service.UserService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,19 +17,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Validated
+@RequiredArgsConstructor
 @Api(value = "3 - User API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"3 - User API"})
-public class UserController{
+public class UserController implements UserAPI{
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping ("/listar")
-    public ResponseEntity<List<UserDTO>> listUser(@RequestParam(required = false) Integer id){
-        return ResponseEntity.ok(userService.listUser(id));
+    public ResponseEntity<List<UserDTO>> listUser(@RequestParam(required = false) Integer id) throws Exception {
+        return ResponseEntity.ok(userService.listUsers(id));
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> postUser(@Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception {
+    public ResponseEntity<UserDTO> postUser(@Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception{
         return ResponseEntity.ok(userService.createUser(userCreateDTO));
     }
 
@@ -42,30 +39,30 @@ public class UserController{
                                                     @Valid @RequestBody UserCreateDTO userCreateDTO) throws Exception {
         return ResponseEntity.ok(userService.updateUser(id, userCreateDTO));
     }
-//
+
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Integer id) throws Exception {
-        userService.delete(id);
+        userService.deleteUser(id);
         return ResponseEntity.ok("User deleted!");
     }
 
     @GetMapping("/list-likes-by-id")
     public ResponseEntity<List<UserDTOCompleto>> listLikesById(@RequestParam("id") Integer id) throws Exception {
-        return ResponseEntity.ok(userService.listLikeById(id));
+        return ResponseEntity.ok(userService.listLikesOfTheUserById(id));
     }
 
     @GetMapping("/list-received-likes-by-id")
     public ResponseEntity<List<UserDTOCompleto>> listReceivedLikesById(@RequestParam("id") Integer id) throws Exception {
-        return ResponseEntity.ok(userService.listReceivedLikeById(id));
+        return ResponseEntity.ok(userService.listReceivedLikesOfTheUserById(id));
     }
 
     @GetMapping("/getCompleto")
-    public List<UserDTOCompleto> listUserComplete(@RequestParam(value = "id", required = false) Integer id){
-        return userService.userDTOCompletos(id);
+    public ResponseEntity<List<UserDTOCompleto>> listUserComplete(@RequestParam(value = "id", required = false) Integer id) throws Exception {
+        return ResponseEntity.ok(userService.listUserDTOComplete(id));
     }
 
     @GetMapping("/get-matches-by-id")
-    public ResponseEntity<List<UserDTOCompleto>> listMatchesById(@RequestParam("id") Integer id){
+    public ResponseEntity<List<UserDTOCompleto>> listMatchesById(@RequestParam("id") Integer id) throws Exception {
         return ResponseEntity.ok(userService.listMatchesOfTheUser(id));
     }
 

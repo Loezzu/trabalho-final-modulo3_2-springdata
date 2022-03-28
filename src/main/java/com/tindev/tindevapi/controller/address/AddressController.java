@@ -19,13 +19,13 @@ import java.util.List;
 @RequestMapping("/address")
 @Validated
 @Api(value = "2 - Address API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"2 - Address API"})
-public class AddressController{
+public class AddressController implements AddressAPI {
 
     @Autowired
     private AddressService addressService;
 
     @GetMapping("/list-address")
-    public ResponseEntity<List<AddressDTO>> listAddress(@RequestParam(required = false) Integer id){
+    public ResponseEntity<List<AddressDTO>> listAddress(@RequestParam(required = false) Integer id) throws Exception{
         return ResponseEntity.ok(addressService.listAddress(id));
     }
 
@@ -34,14 +34,14 @@ public class AddressController{
         return ResponseEntity.ok(addressService.createAddress(addressCreateDTO));
     }
     @PutMapping("/update")
-    public ResponseEntity<AddressDTO> update(@RequestBody AddressCreateDTO addressCreateDTO, @RequestParam("id") Integer id){
+    public ResponseEntity<AddressDTO> update(@RequestBody AddressCreateDTO addressCreateDTO, @RequestParam("id") Integer id) throws Exception{
         return ResponseEntity.ok(addressService.updateAddress(addressCreateDTO, id));
     }
 
     @DeleteMapping("/id")
-    public ResponseEntity<String> delete(@RequestParam("id") Integer id){
+    public ResponseEntity<String> delete(@RequestParam("id") Integer id) throws Exception{
         addressService.deleteAddress(id);
-        return new ResponseEntity<>("PersoInfo deleted", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Address deleted", HttpStatus.ACCEPTED);
     }
 
 }

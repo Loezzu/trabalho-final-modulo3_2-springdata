@@ -10,6 +10,7 @@ import com.tindev.tindevapi.dto.user.UserDTOCompleto;
 import com.tindev.tindevapi.entities.AddressEntity;
 import com.tindev.tindevapi.entities.PersonInfoEntity;
 import com.tindev.tindevapi.entities.UserEntity;
+import com.tindev.tindevapi.exceptions.RegraDeNegocioException;
 import com.tindev.tindevapi.repository.AddressRepository;
 import com.tindev.tindevapi.repository.PersonInfoRepository;
 import com.tindev.tindevapi.repository.UserRepository;
@@ -32,8 +33,9 @@ public class UserService {
     private final PersonInfoRepository personInfoRepository;
     private final ObjectMapper objectMapper;
 
-    public List<UserDTO> listUser(Integer id) {
+    public List<UserDTO> listUsers(Integer id) throws RegraDeNegocioException {
         if (id != null) {
+            userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
             return userRepository.findById(id).stream().map(userEntity ->
                             objectMapper.convertValue(userEntity, UserDTO.class))
                     .collect(Collectors.toList());
@@ -47,7 +49,6 @@ public class UserService {
     public UserDTO createUser(UserCreateDTO userCreateDTO) throws Exception {
         log.info("Calling the Create user method");
         UserEntity userEntity = objectMapper.convertValue(userCreateDTO, UserEntity.class);
-
         AddressEntity addressEntity = addressRepository.findById(userEntity.getAddressId())
                 .orElseThrow(() -> new Exception("Address not found"));
         PersonInfoEntity personInfoEntity = personInfoRepository.findById(userEntity.getPersoInfoId())
@@ -59,7 +60,8 @@ public class UserService {
         return objectMapper.convertValue(userRepository.save(userEntity), UserDTO.class);
     }
 
-    public UserDTO updateUser(Integer id, UserCreateDTO userUpdated) {
+    public UserDTO updateUser(Integer id, UserCreateDTO userUpdated) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         UserEntity userEntity = userRepository.getById(id);
         userEntity.setPersoInfoId(userUpdated.getPersoInfoId());
         userEntity.setAddressId(userUpdated.getAddressId());
@@ -71,31 +73,35 @@ public class UserService {
         return objectMapper.convertValue((userRepository.save(userEntity)), UserDTO.class);
     }
 
-    public void delete(Integer id) {
+    public void deleteUser(Integer id) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         userRepository.deleteById(id);
     }
 
-    public UserDTO getUserById(Integer id) {
+    public UserDTO getUserById(Integer id) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         return objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).convertValue((userRepository.findById(id)), UserDTO.class);
     }
 
-    public List<UserDTOCompleto> listLikeById(Integer id) {
+    public List<UserDTOCompleto> listLikesOfTheUserById(Integer id) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         return userRepository.listLikesById(id).stream()
                 .map(this::getUserComplete).toList();
     }
 
-    public List<UserDTOCompleto> listReceivedLikeById(Integer id) {
+    public List<UserDTOCompleto> listReceivedLikesOfTheUserById(Integer id) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         return userRepository.listReceivedLikesById(id).stream()
                 .map(this::getUserComplete).toList();
     }
 
-    public List<UserDTOCompleto> userDTOCompletos(Integer id) {
+    public List<UserDTOCompleto> listUserDTOComplete(Integer id) throws RegraDeNegocioException {
         if (id == null) {
             return new ArrayList<>(userRepository.findAll().stream().map(this::getUserComplete).toList());
         } else {
+            userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
             return new ArrayList<>(userRepository.findAllById(Collections.singleton(id)).stream().map(this::getUserComplete).toList());
         }
-
     }
 
     private UserDTOCompleto getUserComplete(UserEntity userEntity) {
@@ -105,14 +111,12 @@ public class UserService {
         return userDTOCompleto;
     }
 
-
-    public List<UserDTOCompleto> listMatchesOfTheUser (Integer id){
+    public List<UserDTOCompleto> listMatchesOfTheUser (Integer id) throws RegraDeNegocioException {
+        userRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("ID not found"));
         return userRepository.listMatchesByUserId(id).stream()
                 .map(this::getUserComplete).toList();
 
     }
-
-
 }
 
 
