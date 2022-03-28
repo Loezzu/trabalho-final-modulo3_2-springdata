@@ -20,14 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Validated
-@RequiredArgsConstructor
 @Api(value = "3 - User API", produces = MediaType.APPLICATION_JSON_VALUE, tags = {"3 - User API"})
 public class UserController{
 
+    @Autowired
+    private UserService userService;
 
-    private final UserService userService;
-
-    @GetMapping ("/listar/{id}")
+    @GetMapping ("/listar")
     public ResponseEntity<List<UserDTO>> listUser(@RequestParam(required = false) Integer id){
         return ResponseEntity.ok(userService.listUser(id));
     }

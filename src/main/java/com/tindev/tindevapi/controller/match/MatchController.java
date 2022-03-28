@@ -25,7 +25,7 @@ public class MatchController{
         return ResponseEntity.ok(matchService.list());
     }
 
-    @PostMapping("/{userId1}/{userId2}")
+    @PostMapping("userId1/userId2")
     public ResponseEntity<MatchDTO> addMatch(@RequestParam("userId1") Integer userId1, @RequestParam("userId2") Integer userId2) throws Exception {
         return ResponseEntity.ok(matchService.addMatch(userId1, userId2));
     }

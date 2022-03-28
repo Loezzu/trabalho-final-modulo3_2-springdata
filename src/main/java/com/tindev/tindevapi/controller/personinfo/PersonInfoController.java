@@ -23,7 +23,7 @@ public class PersonInfoController{
     @Autowired
     private PersonInfoService persoInfoService;
 
-    @GetMapping("/list-person-info/{id}")
+    @GetMapping("/list-person-info")
     public ResponseEntity<List<PersonInfoDTO>> list(@RequestParam(required = false) Integer id){
         return ResponseEntity.ok(persoInfoService.listPersonInfo(id));
     }

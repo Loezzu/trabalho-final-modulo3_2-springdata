@@ -24,7 +24,7 @@ public class AddressController{
     @Autowired
     private AddressService addressService;
 
-    @GetMapping("/list-address/{id}")
+    @GetMapping("/list-address")
     public ResponseEntity<List<AddressDTO>> listAddress(@RequestParam(required = false) Integer id){
         return ResponseEntity.ok(addressService.listAddress(id));
     }
@@ -38,7 +38,7 @@ public class AddressController{
         return ResponseEntity.ok(addressService.updateAddress(addressCreateDTO, id));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id")
     public ResponseEntity<String> delete(@RequestParam("id") Integer id){
         addressService.deleteAddress(id);
         return new ResponseEntity<>("PersoInfo deleted", HttpStatus.ACCEPTED);
